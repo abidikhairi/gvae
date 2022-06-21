@@ -1,0 +1,1 @@
+### Graph Variational Autoencoder (kipf et welling, NIPS Workshop 2016)
