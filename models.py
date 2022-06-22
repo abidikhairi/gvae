@@ -90,7 +90,7 @@ class VGAE(nn.Module):
         self.log_std = self.conv_log_std(hn, adj)
         noise = th.randn(x.size(0), self.code_size).to(x.device)
         
-        z = self.mean + noise * th.log(self.log_std)
+        z = self.mean + noise * th.exp(self.log_std)
         return z
 
 
