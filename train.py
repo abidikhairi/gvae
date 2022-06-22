@@ -4,7 +4,7 @@ import argparse
 import torch as th
 from torch.nn import functional as F
 
-from models import GAE
+from models import GAE, VGAE
 from utils import get_scores, normalize_adjacency, get_edges, split_edges, compute_loss_para
 
 
@@ -20,6 +20,7 @@ def main(args):
     lr = args.lr
     hidden_size = args.hidden_size
     code_size = args.code_size
+    model_name = args.model_name
 
     device = th.device('cpu' if th.cuda.is_available() else 'cpu')
     
@@ -34,21 +35,26 @@ def main(args):
     weight_tensor, norm = compute_loss_para(train_adj)
     train_adj_norm = normalize_adjacency(train_adj).to(train_adj.device)
     feature_size = features.shape[1]
-    
-    gae = GAE(feature_size, hidden_size, code_size)
 
-    gae.to(device)
+    if model_name == 'gae':
+        model = GAE(feature_size, hidden_size, code_size)
+    elif model_name == 'vgae':
+        model = VGAE(feature_size, hidden_size, code_size)
+    else:
+        raise ValueError('Model name not recognized')
 
-    optimizer = th.optim.Adam(gae.parameters(), lr=lr)
+    model.to(device)
+
+    optimizer = th.optim.Adam(model.parameters(), lr=lr)
     
-    logger.info('Total Parameters: {}'.format(sum([p.nelement() for p in gae.parameters()])))
+    logger.info('Total Parameters: {}'.format(sum([p.nelement() for p in model.parameters()])))
 
     
     for epoch in range(epochs):
-        gae.train()
+        model.train()
         optimizer.zero_grad()
         
-        _, logits = gae(features, train_adj_norm)
+        _, logits = model(features, train_adj_norm)
         
         reconstruction_loss = norm * F.binary_cross_entropy(logits.view(-1), train_adj.view(-1), weight=weight_tensor)
 
@@ -76,6 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('--lr', type=float, default=0.01, help='learning rate')
     parser.add_argument('--hidden-size', type=int, default=32, help='number of hidden units')
     parser.add_argument('--code-size', type=int, default=16, help='number of hidden units')
+    parser.add_argument('--model-name', type=str, default='gae', choices=['gae', 'vgae'], help='model name')
 
     args = parser.parse_args()
     main(args)
