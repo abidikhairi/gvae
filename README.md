@@ -52,3 +52,4 @@ available datasets are: cora, pubmed, citeseer
 - [ ] Write the GVAE section
 - [ ] Add diagrams to the README (VGAE)
 - [ ] Implement Dense GAE
+- [ ] Add KL divergence to the loss function
