@@ -71,6 +71,9 @@ def main(args):
     
     logger.info('training finished !!')
     logger.info('test auroc: {:.2f} % test ap: {:.2f} % '.format(test_roc * 100, test_ap * 100))
+    
+    with open(f'./results/{dataset}-{model_name}.txt', 'a') as f:
+        f.write(f'{test_roc},{test_ap}\n')
 
 
 if __name__ == '__main__':
