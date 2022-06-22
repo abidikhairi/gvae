@@ -103,4 +103,4 @@ class VGAE(nn.Module):
         z = self.encoder(x, adj)
         adj_rec = self.decoder(z)
 
-        return adj_rec
+        return z, adj_rec
