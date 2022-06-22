@@ -48,6 +48,7 @@ available datasets are: cora, pubmed, citeseer
 ### TODO:
 - [x] Implement the graph autoencoder
 - [x] Run experiments on citation networks
-- [ ] Implement the graph variational autoencoder
+- [x] Implement the graph variational autoencoder
 - [ ] Write the GVAE section
 - [ ] Add diagrams to the README (VGAE)
+- [ ] Implement Dense GAE
