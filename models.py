@@ -78,7 +78,7 @@ class VGAE(nn.Module):
         self.hidden_size = hidden_size
         self.code_size = code_size
 
-        self.gcn = GCN(feature_size, hidden_size, hidden_size)
+        self.gcn = GraphConvolutionLayer(feature_size, hidden_size)
 
         self.conv_mean = GraphConvolutionLayer(hidden_size, code_size)
         self.conv_log_std = GraphConvolutionLayer(hidden_size, code_size)

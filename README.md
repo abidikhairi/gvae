@@ -51,5 +51,5 @@ available datasets are: cora, pubmed, citeseer
 - [x] Implement the graph variational autoencoder
 - [ ] Write the GVAE section
 - [ ] Add diagrams to the README (VGAE)
-- [ ] Implement Dense GAE
-- [ ] Add KL divergence to the loss function
+- [x] Implement Dense GAE (not pushed to github yet)
+- [x] Add KL divergence to the loss function
