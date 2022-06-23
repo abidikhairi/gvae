@@ -5,7 +5,7 @@ import torch as th
 from torch.nn import functional as F
 
 from models import GAE, VGAE
-from utils import get_scores, normalize_adjacency, get_edges, split_edges, compute_loss_para
+from utils import compute_kl_div, get_scores, normalize_adjacency, get_edges, split_edges, compute_loss_para
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')
@@ -54,11 +54,15 @@ def main(args):
         model.train()
         optimizer.zero_grad()
         
-        _, logits = model(features, train_adj_norm)
+        z, logits = model(features, train_adj_norm)
         
         reconstruction_loss = norm * F.binary_cross_entropy(logits.view(-1), train_adj.view(-1), weight=weight_tensor)
 
-        reconstruction_loss.backward()
+        if model_name == 'vgae':
+            loss = reconstruction_loss - compute_kl_div(z)
+            loss.backward()
+        else:
+            reconstruction_loss.backward()
         optimizer.step()
 
         val_auroc, val_ap = get_scores(val_edges, val_edges_false, logits)

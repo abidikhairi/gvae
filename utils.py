@@ -136,3 +136,11 @@ def get_scores(pos_edges, neg_edges, adj):
     ap_score = thm.average_precision(preds_all, labels_all).item()
 
     return auroc_score, ap_score
+
+
+def compute_kl_div(z_sampled):
+    batch_size = z_sampled.shape[0]
+
+    z = th.randn(batch_size, z_sampled.shape[1]).to(z_sampled.device)
+
+    return th.kl_div(z_sampled, z).mean()
